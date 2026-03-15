@@ -2,10 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hello World</title>
+  <title>Hello World from Google Sheets</title>
 </head>
 <body>
-  <h1>Hello World!</h1>
-  <p>This is my first GitHub Pages website.</p>
+  <h1 id="hello-text">Loading message...</h1>
+  <p id="hello-time"></p>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwQ88CVN_qpnvGSwNFyxUdc4NoG5wI55OEiPb9KmcUgP67dZLVW9Ax1Ssgla74LeHUb/exec';
+
+    async function loadMessage() {
+      try {
+        const response = await fetch(scriptURL);
+        if (!response.ok) throw new Error('Network error');
+        const data = await response.json();
+
+        document.getElementById('hello-text').innerText = data.message;
+        document.getElementById('hello-time').innerText = 'Updated at: ' + new Date(data.time).toLocaleString();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('hello-text').innerText = 'Error loading message';
+      }
+    }
+
+    // Load immediately
+    loadMessage();
+
+    // Refresh every 10 seconds
+    setInterval(loadMessage, 10000);
+  </script>
 </body>
 </html>
