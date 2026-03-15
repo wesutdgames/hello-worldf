@@ -1,42 +1,122 @@
 <h2>Test </h2>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>JSON Reader</title>
+<title>Train Operation Status</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Main box */
+.status-box {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  width: 420px;
+  display: flex;
+  overflow: hidden;
+  font-size: 18px;
+}
+
+/* Left side (1/4) */
+.status-label {
+  width: 25%;
+  background: #cdcfd1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-right: 2px solid #ddd; /* separator line */
+}
+
+/* Right side (3/4) */
+.status-message {
+  width: 75%;
+  padding: 20px;
+  text-align: left;
+}
+
+/* Status colors */
+.operating .status-message { color: green; }
+.stopped .status-message { color: red; }
+.returning .status-message { color: orange; }
+</style>
 </head>
 
 <body>
 
-<h1 id="message">Loading...</h1>
-<p id="time"></p>
+<div class="status-box operating" id="trainStatus">
+  <div class="status-label">
+    NS LINE
+  </div>
+  <div class="status-message" id="statusMessage">
+    Loading train status...
+  </div>
+</div>
 
 <script>
+/* ===========================
+   CONFIGURATION
+=========================== */
+// Replace this URL with your GitHub JSON URL
+const JSON_URL = "https://raw.githubusercontent.com/wesutdgames/hello-worldf/main/data.json";
 
-async function loadJSON() {
+/* ===========================
+   LOGIC
+=========================== */
+async function updateTrainStatus() {
+  const box = document.getElementById("trainStatus");
+  const msgEl = document.getElementById("statusMessage");
 
   try {
-
-    const url = "data.json?nocache=" + new Date().getTime();
-
+    // Add nocache parameter to force fresh fetch
+    const url = JSON_URL + "?nocache=" + new Date().getTime();
     const response = await fetch(url);
     const data = await response.json();
 
-    document.getElementById("message").textContent = data.message;
-    document.getElementById("time").textContent = "Updated: " + data.updated;
+    // Expect JSON like: { "CurrentStatus":"Operating", "Message":"Some message here" }
+    let status = data.CurrentStatus?.toLowerCase();
+    let message = data.Message;
 
-  } catch (error) {
+    // Fallback logic if JSON is missing/empty
+    if (!status) {
+      const hour = new Date().getHours();
 
-    document.getElementById("message").textContent = "Error loading JSON";
+      if (hour >= 6 && hour < 22) {
+        status = "operating";
+        message = "🚆 በቃሊቲ መስመር ባቡር ሙሉ አገልግሎት እየሰጠ ይገኛል";
+      } else if (hour >= 22 || hour < 5) {
+        status = "stopped";
+        message = "⏹ 🚆 በቃሊቲ መስመር መደበኛ የባቡር አገልግሎት ተጠናቋል";
+      } else {
+        status = "returning";
+        message = "🚆 በቃሊቲ መስመር መደበኛ የባቡር አገልግሎት ለመጀመር በዝግጅት ላይ ይገኛል";
+      }
+    }
 
+    msgEl.textContent = message;
+    box.className = "status-box " + status;
+
+  } catch (e) {
+    msgEl.textContent = "⚠ መደበኛ የጥገና ስራ እየተሰራ ይገኛል";
+    box.className = "status-box stopped";
   }
-
 }
 
-loadJSON();
+// Initial load
+updateTrainStatus();
 
-setInterval(loadJSON, 5000); // refresh every 5 seconds
-
+// Update every 60 seconds
+setInterval(updateTrainStatus, 60000);
 </script>
 
 </body>
