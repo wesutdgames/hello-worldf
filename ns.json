@@ -1,13 +1,7 @@
 {
-  "year": 2026,
-  "minute": 49,
-  "hour": 0,
-  "day-of-week": 2,
-  "day-of-month": 17,
-  "month": 3,
-  "week-of-year": 12,
-  "triggerUid": "7855866447799517184",
-  "second": 1,
-  "timezone": "UTC",
-  "authMode": "FULL"
+  "status": "operating",
+  "am": "",
+  "en": "",
+  "or": "",
+  "last_updated": "2026-03-17T00:49:36.216Z"
 }
