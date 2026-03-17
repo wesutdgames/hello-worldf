@@ -1,7 +1,13 @@
 {
-  "status": "stopped",
-  "am": "???? ???! ???? ???? ?????? ?????",
-  "en": "Happy Holiday! NS line not operational",
-  "or": "Baga ayyaana gahe! Karaan NS hin hojjetu",
-  "last_updated": "2026-03-17T00:50:03.065Z"
+  "day-of-week": 2,
+  "minute": 51,
+  "authMode": "FULL",
+  "timezone": "UTC",
+  "week-of-year": 12,
+  "triggerUid": "7855866447799517184",
+  "hour": 0,
+  "month": 3,
+  "day-of-month": 17,
+  "second": 1,
+  "year": 2026
 }
