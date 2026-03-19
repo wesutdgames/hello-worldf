@@ -224,8 +224,11 @@ async function updateNS() {
   const box = document.getElementById("trainNS");
   const msgEl = document.getElementById("statusMsgNS");
 
-  const url =
-  `https://opensheet.elk.sh/${SHEET_NS_ID}/${SHEET_NAME}`;
+ const res = await fetch(NS_JSON + "?t=" + Date.now());
+const row = await res.json();
+
+let status = row?.status?.toLowerCase();
+let message = decodeBase64UTF8(row?.am || "");
 
   try {
 
@@ -301,7 +304,11 @@ async function updateEW() {
   const msgEl = document.getElementById("statusMsgEW");
 
   const url =
-  `https://opensheet.elk.sh/${SHEET_EW_ID}/${SHEET_NAME}`;
+  const res = await fetch(EW_JSON + "?t=" + Date.now());
+const row = await res.json();
+
+let status = row?.status?.toLowerCase();
+let message = decodeBase64UTF8(row?.am || "");
 
   try {
 
